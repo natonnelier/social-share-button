@@ -8,11 +8,12 @@ window.SocialShareButton =
 
   share : (el) ->
     site = $(el).data('site')
+    dataUrl = $(el).data('url')
     appkey = $(el).data('appkey') || ''
     $parent = $(el).parent()
     title = encodeURIComponent($(el).data(site + '-title') || $parent.data('title') || '')
     img = encodeURIComponent($parent.data("img") || '')
-    url = encodeURIComponent($parent.data("url") || '')
+    url = encodeURIComponent(dataUrl || $parent.data("url") || '')
     via = encodeURIComponent($parent.data("via") || '')
     desc = encodeURIComponent($parent.data("desc") || ' ')
 
@@ -42,18 +43,16 @@ window.SocialShareButton =
       when "pinterest"
         SocialShareButton.openUrl("http://www.pinterest.com/pin/create/button/?url=#{url}&media=#{img}&description=#{title}")
       when "linkedin"
-        SocialShareButton.openUrl("https://www.linkedin.com/shareArticle?mini=true&url=#{url}&title=#{title}&summary=#{desc}")
-      when "xing"
-        SocialShareButton.openUrl("https://www.xing.com/spi/shares/new?url=#{url}")
-      when "vkontakte"
-        SocialShareButton.openUrl("http://vk.com/share.php?url=#{url}&title=#{title}&image=#{img}")
-      when "wechat"
-        throw new Error("You should require social-share-button/wechat to your application.js") unless window.SocialShareWeChatButton
-        window.SocialShareWeChatButton.qrcode
-          url: url
-          header: title
-          footer: $(el).data('wechat-footer')
-
+        SocialShareButton.openUrl("https://www.linkedin.com/shareArticle?url=#{url}&title=#{title}")
+      when "weixin"
+        if wx == undefined
+          console.log "You must require weichat API js by your self. https://res.wx.qq.com/open/js/jweixin-1.0.0.js"
+          return false
+        opts =
+          title: title
+          link: url
+          imgUrl: img
+        wx.onMenuShareTimeline(opts)
       when "tumblr"
         get_tumblr_extra = (param) ->
           cutom_data = $(el).attr("data-#{param}")
@@ -83,9 +82,4 @@ window.SocialShareButton =
           "/#{path}?#{params}"
 
         SocialShareButton.openUrl("http://www.tumblr.com/share#{tumblr_params()}")
-
-      when "reddit"
-        SocialShareButton.openUrl("http://www.reddit.com/submit?url=#{url}&newwindow=1", 555, 400)
-      when "hacker_news"
-        SocialShareButton.openUrl("http://news.ycombinator.com/submitlink?u=#{url}&t=#{title}", 770, 500)
     false
