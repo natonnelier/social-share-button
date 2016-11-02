@@ -1,6 +1,6 @@
 # Social Share Button
 
-This is a gem to helper you quick create a share feature in you Rails apps.
+This is a fork from the gem social-share-button, a helper for quick creating a share feature in you Rails apps. Adds the feature of inserting specific urls for different medias.
 
 [![Gem Version](https://badge.fury.io/rb/social-share-button.svg)](https://badge.fury.io/rb/social-share-button)
 
@@ -33,13 +33,7 @@ This is a gem to helper you quick create a share feature in you Rails apps.
 In your `Gemfile`:
 
 ```ruby
-gem 'social-share-button'
-```
-
-Old version for IE and lower browser support:
-
-```ruby
-gem 'social-share-button', '0.2.1'
+gem 'social-share-button', git: 'https://github.com/natonnelier/social-share-button'
 ```
 
 And install it:
@@ -111,6 +105,15 @@ You can also specify the URL that it links to:
 ```erb
 <%= social_share_button_tag(@post.title, :url => "http://myapp.com/foo/bar", :image => "http://foo.bar/images/a.jpg", desc: "The summary of page", via: "MyTwitterName") %>
 ```
+
+And you can set an alternative URL for one or more of the defined social networks:
+
+```erb
+<%= social_share_button_tag(@post.title, :url => "http://myapp.com/foo/bar", :alt_urls => { "twitter" => "http://otherapp.com/", "facebook" => "http://otherapp.com/" } ) %>
+```
+
+```erb
+<%= social_share_button_tag(@post.title, :url => "http://myapp.com/foo/bar", :alt_urls => { "twitter" => "http://otherapp.com/", "facebook" => "http://otherapp.com/" }, :image => "http://foo.bar/images/a.jpg", desc: "The summary of page", via: "MyTwitterName") %>
 
 For the Tumblr there are an extra settings, prefixed with :'data-*'
 ```erb
